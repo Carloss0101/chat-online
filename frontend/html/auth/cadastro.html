@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta</title>
+
+    <link rel="stylesheet" href="../../css/auth.css">
+</head>
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Criar conta</h1>
+        <p>Preencha os dados abaixo.</p>
+
+        <form id="cadastroForm">
+
+            <div class="input-group">
+                <label>Usuário</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Nome de usuário"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>E-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Digite seu e-mail"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    placeholder="Crie uma senha"
+                    required>
+            </div>
+
+            <button type="submit">
+                Criar conta
+            </button>
+            <p id="mensagem-resposta"></p>
+        </form>
+
+        <div class="auth-link">
+            Já possui uma conta?
+            <a href="./login">Entrar</a>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="../../js/auth/cadastro.js"></script>
+
+</body>
+</html>

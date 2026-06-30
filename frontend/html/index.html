@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Online</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="discord-container">
+        <aside class="sidebar">
+            <div class="server-header">
+                <h3>Meu Servidor</h3>
+            </div>
+            <div class="channels-list">
+                <div class="channel active">
+                    <span class="hashtag">#</span> geral
+                </div>
+            </div>
+
+            <div class="user-config">
+                <div class="avatar user-avatar"></div>
+                <div class="message-info">
+                    <span class="username" id="username-menu"></span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-area">
+            <header class="channel-header">
+                <h4><span class="hashtag">#</span> geral</h4>
+            </header>
+
+            <div class="messages-container" id="chatMessages">
+            </div>
+
+            <footer class="chat-footer">
+                <form id="chatForm">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Conversar em #geral" 
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" id="sendButton">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                        </svg>
+                    </button>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <script type="module" src="../js/script.js"></script>
+</body>
+</html>
