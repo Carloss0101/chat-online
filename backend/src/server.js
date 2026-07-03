@@ -15,6 +15,7 @@ const port = 8080
 import messageRoutes from "./routes/mensagemRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import pageRoutes from "./routes/pagesRoutes.js";
+import canaisRoutes from "./routes/canaisRoutes.js";
 import prisma from "./config/prisma.js";
 
 const server = http.createServer(app);
@@ -28,6 +29,8 @@ app.use(express.static(path.join(__dirname, "../../frontend")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/mensagem", messageRoutes);
+app.use("/api/canais", canaisRoutes);
+
 app.use(pageRoutes);
 
 async function start() {

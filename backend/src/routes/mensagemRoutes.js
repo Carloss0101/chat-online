@@ -5,7 +5,7 @@ import { autenticar } from "../middleware/authMiddleware.js";
 const router = Router();
 
 router.post("/", autenticar, enviarMensagem);
-router.get("/", autenticar, getTodasMensagem);
-router.get("/:id", autenticar, getMensagem);
+router.get("/:chatId", autenticar, getTodasMensagem);
+//router.get("/:id", autenticar, getMensagem);
 
 export default router;

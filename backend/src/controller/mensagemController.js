@@ -1,13 +1,13 @@
-import {criarMensagem, getMensagemByID, getMensagens} from "../services/mensagemService.js"
+import {criarMensagem, getMensagemByID, getMensagensByChat} from "../services/mensagemService.js"
 import {getWebSocket} from "../config/webSocket.js";
 
 export async function enviarMensagem(req, res) {
     try {
-        const {mensagem} = req.body;
+        const {mensagem, chat} = req.body;
 
         const userId = req.usuario.id;
 
-        const resposta = await criarMensagem(userId, mensagem);
+        const resposta = await criarMensagem(userId, mensagem, chat);
 
         if(resposta.status != 200) {
             return res.status(resposta.status).json(resposta.mensagem);
@@ -47,7 +47,8 @@ export async function getMensagem(req, res) {
 
 export async function getTodasMensagem(req, res) {
     try {
-        const resMensagens =  await getMensagens();
+        const {chatId} = req.params;
+        const resMensagens =  await getMensagensByChat(chatId);
 
         if(resMensagens.status != 200) {
             return res.status(resMensagens.status).json(resMensagens.mensagem);

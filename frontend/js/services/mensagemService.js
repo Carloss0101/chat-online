@@ -1,4 +1,4 @@
-import { buscarTodasMensagens } from "../api/mensagemApi.js"
+import { buscarTodasMensagens } from "../api/api.js"
 
 function formatarDataMensagem(dataString) {
   const data = new Date(dataString);
@@ -61,8 +61,8 @@ export function appendMessage(container, text, type, username, data) {
     container.scrollTop = container.scrollHeight;
 }
 
-export async function obterHistoricoFormatado(userId) {
-    const resposta = await buscarTodasMensagens();
+export async function obterHistoricoFormatado(userId, chatId) {
+    const resposta = await buscarTodasMensagens(chatId);
     const historico = Array.isArray(resposta) ? resposta : (resposta?.dados || []);
 
     return historico.map(msg => {

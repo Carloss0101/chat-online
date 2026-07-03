@@ -13,10 +13,7 @@
             <div class="server-header">
                 <h3>Meu Servidor</h3>
             </div>
-            <div class="channels-list">
-                <div class="channel active">
-                    <span class="hashtag">#</span> geral
-                </div>
+            <div class="channels-list" id="channelsList">
             </div>
 
             <div class="user-config">
@@ -53,7 +50,9 @@
             </footer>
         </main>
     </div>
-
+    <div id="loading" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
     <script type="module" src="../js/script.js"></script>
 </body>
 </html>

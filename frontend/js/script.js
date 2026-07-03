@@ -1,8 +1,11 @@
 import { appendMessage, obterHistoricoFormatado } from "./services/mensagemService.js";
-import { enviarMensagem } from "./api/mensagemApi.js";
+import { enviarMensagem } from "./api/api.js";
+import { renderizarCanais } from "./services/canaisService.js";
+import { mostrarLoading, esconderLoading } from "./services/loadingService.js";
 
 const userId = localStorage.getItem("userId");
 const username = localStorage.getItem("username");
+let canalAtual = null;
 
 console.log(userId);
 console.log(username);
@@ -14,14 +17,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById("username-menu").innerHTML = username;
 
-    async function renderizarHistorico() {
-        const historico = await obterHistoricoFormatado(userId);
+    async function selecionarCanal(canal) {
+        canalAtual = canal;
+
+        document.querySelector(".channel-header h4").innerHTML =
+            `<span class="hashtag">#</span> ${canal.nome}`;
+
+        messageInput.placeholder =
+            `Conversar em #${canal.nome}`;
+
+        chatMessages.innerHTML = "";
+
+        await renderizarHistorico(canal.id);
+    }
+
+    await renderizarCanais(selecionarCanal);
+
+
+
+    async function renderizarHistorico(chatId) {
+        mostrarLoading();
+        const historico = await obterHistoricoFormatado(userId, chatId);
         historico.forEach(msg => {
             appendMessage(chatMessages, msg.texto, msg.tipo, msg.nome, msg.data);
         });
-    }
 
-    await renderizarHistorico();
+        esconderLoading();
+    }
 
     const socket = new WebSocket("ws://localhost:8080");
 
@@ -35,6 +57,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(resposta);
 
         const mensagem = resposta.dados;
+
+        if (!canalAtual || mensagem.chat_id !== canalAtual.id) {
+            return;
+        }
         appendMessage(
             chatMessages,
             mensagem.mensagem,
@@ -58,12 +84,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         const messageText = messageInput.value.trim();
         if (messageText === '') return;
 
-        await enviarMensagem(messageText);
+        await enviarMensagem(messageText, canalAtual?.id);
 
         //appendMessage(chatMessages, messageText, 'sent', userName, retornoApi.data_hora);
 
         messageInput.value = '';
     });
 
+    div.addEventListener("click", async () => {
+        document.querySelectorAll(".channel").forEach(c => {
+            c.classList.remove("active");
+        });
+
+        div.classList.add("active");
+
+        await onSelect(canal);
+    });
 
 });

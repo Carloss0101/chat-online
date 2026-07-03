@@ -1,17 +1,20 @@
 import prisma from '../config/prisma.js';
 
-export async function criarMensagem(userId, mensagem) {
-    if(!userId) {
-        return {mensagem: "Usuário inválido!", status: 401}
+export async function criarMensagem(userId, mensagem, chat) {
+    if (!userId) return { mensagem: "Usuário inválido!", status: 401 };
+
+    if (!mensagem || mensagem.trim().length === 0 || mensagem.length > 255) {
+        return { mensagem: "Mensagem inválida!", status: 401 };
     }
-    if(!mensagem || mensagem?.length < 0 || mensagem?.length > 255) {
-       return {mensagem: "Mensagem inválida!", status: 401};
-    }
+
+    if (!chat || isNaN(chat)) return { mensagem: "Canal inválido!", status: 400 };
+
     try {
         const novaMensagem = await prisma.mensagem.create({
             data: {
-                user_id: parseInt(userId),
-                mensagem
+                user_id: Number(userId),
+                chat_id: Number(chat),
+                mensagem: mensagem.trim()
             },
             include: {
                 usuario: {
@@ -22,17 +25,16 @@ export async function criarMensagem(userId, mensagem) {
             }
         });
 
-        console.log(novaMensagem);
-        return {mensagem: novaMensagem, status: 200};
-
+        return { mensagem: novaMensagem, status: 200 };
     } catch (error) {
         console.error("Erro ao salvar mensagem no banco:", error);
-        if (error.code === 'P2003') {
-            return {mensagem: "Usuário não encontrado (Falha na Chave Estrangeira).", status: 400};
-        }
-        return {mensagem: "Erro interno ao salvar no banco.", status: 500};
-    }
 
+        if (error.code === "P2003") {
+            return { mensagem: "Usuário ou canal não encontrado.", status: 400 };
+        }
+
+        return { mensagem: "Erro interno ao salvar no banco.", status: 500 };
+    }
 }
 
 export async function getMensagemByID(idMensagem) {
@@ -59,11 +61,17 @@ export async function getMensagemByID(idMensagem) {
     }
 }
 
-export async function getMensagens() {
+export async function getMensagensByChat(chatId) {
     try {
+        if (!chatId) {
+            return { mensagem: "ID da mensagem é obrigatório.", status: 400 };
+        }
         const historico = await prisma.mensagem.findMany({
+            where: {
+                chat_id: Number(chatId)
+            },
             orderBy: {
-                data_hora: 'asc'
+                data_hora: "asc"
             },
             include: {
                 usuario: {
@@ -74,10 +82,11 @@ export async function getMensagens() {
             }
         });
 
-        return { status: 200, dados: historico};
+        return {status: 200,dados: historico};
 
     } catch (error) {
         console.error("Erro ao buscar histórico de mensagens:", error);
-        return { mensagem: "Erro interno ao buscar histórico no banco.", status: 500 };
+
+        return {status: 500,mensagem: "Erro interno ao buscar histórico no banco."};
     }
 }
